@@ -37,6 +37,22 @@ public class Customer extends Person {
         }
     }
 
+    // поиск продуктов по seller
+    public void findProductBySellersName(Market market, String name, String lastname) {
+        boolean sellerWasFind = false;
+        boolean productWasSell = false;
+        for (Seller seller: market.getSellers()) {
+            if (seller.itsHim(name, lastname)) {
+                sellerWasFind = true;
+                productWasSell = seller.canSellProducts(this, expectedPurchaseList);
+                continue;
+            }
+            if (sellerWasFind && !productWasSell) {
+                seller.sellProductsBySeller(this, expectedPurchaseList);
+            }
+        }
+    }
+
     public void info() {
         StringBuilder result = new StringBuilder("Я купил ");
         if (purchaseList.size() == 0) {
@@ -44,15 +60,17 @@ public class Customer extends Person {
         } else {
             for(Product product: purchaseList) {
                 result.append(product.getName());
-                result.append(" в количестве ");
+                result.append(", ");
                 result.append(product.getQuantity());
-                result.append(" ");
+                result.append(" шт., по ");
+                result.append(product.getPrice());
+                result.append(" руб.; ");
             }
         }
 
         result.append(". У меня осталось: ");
         result.append(getCash());
-        result.append(" рублей");
+        result.append(" руб.");
 
         System.out.println(result);
     }

@@ -18,75 +18,68 @@ public class Main {
     public static void main(String[] args) {
         Market market = new Market();
 
-        Seller firstSeller = createFirstSeller();
-        Seller secondSeller = createSecondSeller();
+        // first seller
+        Seller firstSeller = createSeller("Виталий", "Еремин", List.of(
+                createProduct(MarketConstants.TOMATOES_PRODUCT_NAME, 10, 2),
+                createProduct(MarketConstants.CUCUMBER_PRODUCT_NAME, 8, 100)
+        ));
+        // second seller
+        Seller secondSeller = createSeller("Алексей", "Ушаков", List.of(
+                createProduct(MarketConstants.TOMATOES_PRODUCT_NAME, 8, 4),
+                createProduct(MarketConstants.CUCUMBER_PRODUCT_NAME, 5, 12)
+        ));
+        // third seller
+        Seller thirdSeller = createSeller("Алексей", "Давыдов", List.of(
+                createProduct(MarketConstants.TOMATOES_PRODUCT_NAME, 9, 70),
+                createProduct(MarketConstants.CUCUMBER_PRODUCT_NAME, 7, 80)
+        ));
 
         market.addSeller(firstSeller);
         market.addSeller(secondSeller);
+        market.addSeller(thirdSeller);
 
+        System.out.println("Рынок до продажи.");
+        for (Seller seller: market.getSellers()) {
+            seller.info();
+        }
+
+        System.out.println("Рынок после продажи.");
         Customer customer = createFirstCustomer();
-        customer.findProductOnMarket(market);
+        //customer.findProductOnMarket(market);
+        customer.findProductBySellersName(market,"Алексей","Ушаков");
         customer.info();
+        for (Seller seller: market.getSellers()) {
+            seller.info();
+        }
     }
 
     private static Customer createFirstCustomer() {
         Product firstProduct = new Product();
         firstProduct.setName(MarketConstants.TOMATOES_PRODUCT_NAME);
-        firstProduct.setQuantity(3);
+        firstProduct.setQuantity(5);
 
         Product secondProduct = new Product();
         secondProduct.setName(MarketConstants.CUCUMBER_PRODUCT_NAME);
         secondProduct.setQuantity(2);
 
-        return new Customer(List.of(firstProduct, secondProduct), 50);
+        return new Customer(List.of(firstProduct, secondProduct), 100);
     }
 
-    private static Seller createFirstSeller() {
+    private static Seller createSeller(String name, String lastname, List<Product> products) {
         Seller seller = new Seller();
-        seller.setName("Виталий");
-        seller.setLastName("Еремин");
-        seller.setCash(0);
-
-        Product firstProduct = new Product();
-        firstProduct.setName(MarketConstants.TOMATOES_PRODUCT_NAME);
-        firstProduct.setPrice(10);
-        firstProduct.setQuantity(2);
-
-        Product secondProduct = new Product();
-        secondProduct.setName(MarketConstants.CUCUMBER_PRODUCT_NAME);
-        secondProduct.setPrice(8);
-        secondProduct.setQuantity(100);
-
-        List<Product> products = new ArrayList<>();
-        products.add(firstProduct);
-        products.add(secondProduct);
+        seller.setName(name);
+        seller.setLastName(lastname);
         seller.setProducts(products);
-
+        seller.setCash(0);
         return seller;
     }
 
-    private static Seller createSecondSeller() {
-        Seller seller = new Seller();
-        seller.setName("Алексей");
-        seller.setLastName("Ушаков");
-        seller.setCash(0);
-
-        Product firstProduct = new Product();
-        firstProduct.setName(MarketConstants.TOMATOES_PRODUCT_NAME);
-        firstProduct.setPrice(8);
-        firstProduct.setQuantity(40);
-
-        Product secondProduct = new Product();
-        secondProduct.setName(MarketConstants.CUCUMBER_PRODUCT_NAME);
-        secondProduct.setPrice(5);
-        secondProduct.setQuantity(12);
-
-        List<Product> products = new ArrayList<>();
-        products.add(firstProduct);
-        products.add(secondProduct);
-        seller.setProducts(products);
-
-        return seller;
+    private static Product createProduct(String name, int price, int quantity) {
+        Product product = new Product();
+        product.setName(name);
+        product.setQuantity(quantity);
+        product.setPrice(price);
+        return product;
     }
 
 }
